@@ -47,4 +47,5 @@ class SessionStore: # Thread-safe in-memoy storage for VDI Sessions
 # Every operation locks before touching the dictionary (Thread Safety)
 # Each method completes entirely before releasing lock (ATOMIC)
 # Python dictionary in memory, simple and fast
+
 session_store = SessionStore() 
