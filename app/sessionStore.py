@@ -30,3 +30,21 @@ class SessionStore: # Thread-safe in-memoy storage for VDI Sessions
             session.status = SessionStatus.TERMINATED # Update status to terminated
             self._sessions[session_id] = session # Store updated session back in dictionary
             return session
+    
+    def session_exists(self, session_id: str) -> bool: # Quick boolean check if session exists
+        with self._lock: 
+            return session_id in self._sessions
+    
+    def get_all_sessions(self) -> Dict[str, Session]: # Return copy of entire dictionary for testing/debugging
+        with self._lock:
+            return self._sessions.copy() # Return a copy to preserve internal state of dictionary, no external modifications
+    
+
+
+# Global Instance, shared instance across the application (Singleton pattern)
+# FastAPI will import and use this instance
+# All sessions live in this one object's dictionary
+# Every operation locks before touching the dictionary (Thread Safety)
+# Each method completes entirely before releasing lock (ATOMIC)
+# Python dictionary in memory, simple and fast
+session_store = SessionStore() 
