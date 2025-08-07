@@ -32,7 +32,7 @@ class Session(BaseModel): # Store sessions in our dictionary
             sessionId=session_id,
             userId=user_id,
             status=SessionStatus.PENDING,
-            desktopUrl=f"https://vd-{session_id[:8]}.tiktok.com", # Generate a unique desktop URL with first 8 chars of session ID
+            desktopUrl=f"https://vdi-{session_id[:8]}.tiktok.com", # Generate a unique desktop URL with first 8 chars of session ID
             createdAt=datetime.utcnow()
         )
     
