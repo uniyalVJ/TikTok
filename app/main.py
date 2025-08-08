@@ -58,6 +58,10 @@ def terminate_session(session_id: str): # Terminate session by ID
     logger.info(f"Session {session_id} terminated successfully")
     return session.to_response()
 
+@app.get("/health")
+def health_check(): # Health check endpoint
+    return {"status": "healthy", "timestamp": datetime.utcnow()} # Return simple health check response
+
 
 if __name__ == "__main__": # Only run if this file is executed directly
     import uvicorn # ASGI server to run FastAPI app
