@@ -44,3 +44,19 @@ def test_terminate_nonexistent_session():  # Test DELETE /sessions for invalid s
 def test_create_session_invalid_payload(): # Test POST /sessions with invalid payload
     response = client.post("/sessions", json={}) #Empty payload
     assert response.status_code == 422  # Expect Unprocessable Entity
+
+def test_empty_session_id_validation(): # Test GET /sessions with empty session ID
+    response = client.get("/sessions/ ")
+    assert response.status_code == 400
+    assert "Session ID cannot be empty" in response.json()["detail"]
+
+def test_delete_empty_session_id(): # Test DELETE /sessions with empty session ID
+    response = client.delete("/sessions/ ")
+    assert response.status_code == 400
+    assert "Session ID cannot be empty" in response.json()["detail"]
+
+def test_error_response_format(): # Test error reponse format
+    response = client.get("/sessions/nonexistent")
+    assert response.status_code == 404
+    error_data = response.json()
+    assert "detail" in error_data 

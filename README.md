@@ -3,7 +3,7 @@ pip install -r requirements.txt
 
 
 # Run Tests in session-broker/
-pytest tests/test_sessions.py
+pytest tests/ -v
 
 
 # Dockerfile Test
