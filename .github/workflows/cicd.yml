@@ -17,7 +17,7 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
       - run: pip install -r requirements.txt
-      - run: pytest tests/ -v
+      - run: pytest tests/ -v --cov=app --cov-report=term-missing
   
   # Stage 2 - Build
   build:
@@ -26,18 +26,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v2
-      - name: Build and test container
-        run: |
-          docker build -t vdi-session-broker .
-          docker run -d -p 8000:8000 --name test vdi-session-broker
+
+      - name: Build container
+        run: docker build -t vdi-session-broker:${{ github.sha }} .
+      
+      - name: Test container
+        run: | # Run Container, test api health, test core post
+          docker run -d -p 8000:8000 --name test vdi-session-brooker:${{ github.sha }}
           sleep 5
-          curl -f -X POST http://localhost:8000/sessions \
-            -H "Content-Type: application/json" \
-            -d '{"userId": "citest"}'
+          
+          curl -f http://localhost:8000/health 
+
+          curl -f -X POST http://localhost:8000/sessions -H "Content-Type: application/json" -d '{"userId": "cicdtest"}'
+          
           docker stop test
-      - name: Check image size
+      
+      - name: Security Scan
         run: |
-          echo "Image size: $(docker images vdi-session-broker --format '{{.Size}}')"
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $(pwd):/app aquasec/trivy:latest image \
+            --severity HIGH,CRITICAL vdi-session-broker:${{ github.sha }}
+        continue-on-error: true  # ONLY FOR INTERVIEW PURPOSES, DO NOT USE IN PRODUCTION
+        
 
   # Stage 3 - Deploy
   deploy:
