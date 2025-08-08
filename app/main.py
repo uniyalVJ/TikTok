@@ -60,7 +60,10 @@ def terminate_session(session_id: str): # Terminate session by ID
 
 @app.get("/health")
 def health_check(): # Health check endpoint
-    return {"status": "healthy", "timestamp": datetime.utcnow()} # Return simple health check response
+    return {
+        "status": "healthy", 
+        "timestamp": datetime.utcnow() # Return simple health check response
+    }
 
 
 if __name__ == "__main__": # Only run if this file is executed directly
