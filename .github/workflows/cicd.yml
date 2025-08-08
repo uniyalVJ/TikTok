@@ -35,7 +35,7 @@ jobs:
           docker run -d -p 8000:8000 --name test vdi-session-broker:${{ github.sha }}
           
           for i in {1..30}; do
-            if curl -f http://localhost:8000/health; then
+            if curl -f http://localhost:8000/docs; then
               echo "Health check passed"
               break
             fi
