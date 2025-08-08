@@ -23,7 +23,7 @@ WORKDIR /app
 # Copy dependencies from builder
 COPY --from=builder /root/.local /home/appuser/.local
 
-# Copy Application
+# Copy Application 
 COPY app/ ./app/
 
 RUN chown -R appuser:appuser /app
