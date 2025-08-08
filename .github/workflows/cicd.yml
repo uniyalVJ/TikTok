@@ -18,7 +18,7 @@ jobs:
           cache: 'pip'
       - run: pip install -r requirements.txt
       - run: pytest tests/ -v
-      
+
   # Stage 2 - Build
   build:
     runs-on: ubuntu-latest
@@ -32,7 +32,7 @@ jobs:
       
       - name: Test container
         run: | # Run Container, test api health, test core post
-          docker run -d -p 8000:8000 --name test vdi-session-brooker:${{ github.sha }}
+          docker run -d -p 8000:8000 --name test vdi-session-broker:${{ github.sha }}
           sleep 5
           
           curl -f http://localhost:8000/health 
