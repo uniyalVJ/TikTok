@@ -17,8 +17,8 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
       - run: pip install -r requirements.txt
-      - run: pytest tests/ -v --cov=app --cov-report=term-missing
-  
+      - run: pytest tests/ -v
+      
   # Stage 2 - Build
   build:
     runs-on: ubuntu-latest
