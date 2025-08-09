@@ -50,7 +50,20 @@ jobs:
             -v $(pwd):/app aquasec/trivy:latest image \
             --severity HIGH,CRITICAL vdi-session-broker:${{ github.sha }}
         continue-on-error: true  # ONLY FOR INTERVIEW PURPOSES, DO NOT USE IN PRODUCTION
-        
+
+      - name: Container metrics
+        run: |
+          echo "Image size: $(docker images vdi-session-broker:${{ github.sha }} --format '{{.Size}}')"
+          echo "Exposed ports: $(docker inspect vdi-session-broker:${{ github.sha }} --format '{{.Config.ExposedPorts}}')"
+          docker run --rm --name metrics-check vdi-session-broker:${{ github.sha }} ps aux
+          
+      - name: Application metrics
+        run: |
+          docker run -d -p 8000:8000 --name app vdi-session-broker:${{ github.sha }}
+          sleep 5
+          curl -s http://localhost:8000/health | jq
+          echo "Response time: $(curl -w '%{time_total}' -s http://localhost:8000/health)"
+          docker stop app
 
   # Stage 3 - Deploy
   deploy:
