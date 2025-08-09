@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from .models import CreateSessionRequest, SessionResponse
 from .sessionStore import session_store
+from datetime import datetime
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
