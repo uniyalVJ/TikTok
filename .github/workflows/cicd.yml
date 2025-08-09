@@ -61,8 +61,8 @@ jobs:
         run: |
           docker run -d -p 8000:8000 --name app vdi-session-broker:${{ github.sha }}
           sleep 5
-          curl -s http://localhost:8000/docs
-          echo "Response time: $(curl -w '%{time_total}' -s -o /dev/null http://localhost:8000/docs)s"
+          curl -s http://localhost:8000/health
+          echo "Response time: $(curl -w '%{time_total}' -s -o /dev/null http://localhost:8000/health)s"
           docker stop app
 
   # Stage 3 - Deploy
