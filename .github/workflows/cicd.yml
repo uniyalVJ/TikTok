@@ -17,7 +17,7 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
       - run: pip install -r requirements.txt
-      - run: pytest tests/ -v --cov=app -cov-fail-under=85
+      - run: pytest tests/ -v --cov=app --cov-fail-under=85
 
   # Stage 2 - Build
   build:
@@ -61,8 +61,8 @@ jobs:
         run: |
           docker run -d -p 8000:8000 --name app vdi-session-broker:${{ github.sha }}
           sleep 5
-          curl -s http://localhost:8000/health | jq
-          echo "Response time: $(curl -w '%{time_total}' -s http://localhost:8000/health)"
+          curl -s http://localhost:8000/docs
+          echo "Response time: $(curl -w '%{time_total}' -s -o /dev/null http://localhost:8000/docs)s"
           docker stop app
 
   # Stage 3 - Deploy
