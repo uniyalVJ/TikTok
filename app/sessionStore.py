@@ -40,10 +40,10 @@ class SessionStore: # Thread-safe in-memoy storage for VDI Sessions
             return self._sessions.copy() # Return a copy to preserve internal state of dictionary, no external modifications
     
     def activate_session(self, session_id: str) -> Optional[Session]:
-    with self._lock:
-        session = self._sessions.get(session_id)
-        if session is None:
-            return None
+        with self._lock:
+            session = self._sessions.get(session_id)
+            if session is None:
+                return None
         
         if session.status != SessionStatus.PENDING:
             raise ValueError(f"Cannot activate session in {session.status} state")
