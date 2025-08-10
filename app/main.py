@@ -44,6 +44,26 @@ def get_session(session_id: str): # Get session by ID
     
     return session.to_response()
 
+@app.put("/sessions/{session_id}/activate", response_model=SessionResponse)
+def activate_session(session_id: str):
+        
+    if not session_id.strip():
+        raise HTTPException(status_code=400, detail="Session ID cannot be empty")
+    
+    try:
+        session = session_store.activate_session(session_id)
+        
+        if session is None:
+            logger.warning(f"Session not found: {session_id}")
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        logger.info(f"Session {session_id} activated successfully")
+        return session.to_response()
+        
+    except ValueError as e:
+        logger.warning(f"Invalid activation attempt for {session_id}: {e}")
+        raise HTTPException(status_code=409, detail=str(e))
+    
 @app.delete("/sessions/{session_id}", response_model=SessionResponse) # DELETE endpoint to terminate session by ID
 def terminate_session(session_id: str): # Terminate session by ID
     
