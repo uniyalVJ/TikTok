@@ -41,7 +41,7 @@ A containerized microservice that acts as a "Session Broker" for VDI (Virtual De
 docker build -t vdi-session-broker .
 
 # Run container and map port 8000
-docker run -p 8000:8000 vdi-session-broker
+docker run -p 8000:8000 --name vdi-session-broker vdi-session-broker
 
 # Check if container is running
 docker ps | grep vdi-session-broker
@@ -79,7 +79,7 @@ This provides a complete interactive API interface where you can test all endpoi
 ```bash
 
 # Cleanup
-docker stop test-session-broker && docker rm test-session-broker
+docker stop vdi-session-broker && docker rm vdi-session-broker
 
 ```
 ## Development Setup
