@@ -61,8 +61,7 @@ def test_error_response_format(): # Test error reponse format
     error_data = response.json()
     assert "detail" in error_data 
 
-def test_activate_session_success():
-    """Test successful activation of pending session"""
+def test_activate_session_success(): # Test activating a session successfully
     # Create a session first
     create_response = client.post("/sessions", json={"userId": "activateuser"})
     session_id = create_response.json()["sessionId"]
@@ -76,14 +75,12 @@ def test_activate_session_success():
     assert data["status"] == "active"
     assert data["userId"] == "activateuser"
 
-def test_activate_nonexistent_session():
-    """Test activating session that doesn't exist returns 404"""
+def test_activate_nonexistent_session(): # Test activating a session that does not exist returns 404
     response = client.put("/sessions/fake-session-id/activate")
     assert response.status_code == 404
     assert "Session not found" in response.json()["detail"]
 
-def test_activate_already_active_session():
-    """Test activating already active session returns 409"""
+def test_activate_already_active_session(): # Test activating an already active session returns 409
     # Create and activate session
     create_response = client.post("/sessions", json={"userId": "doubleactivate"})
     session_id = create_response.json()["sessionId"]
@@ -94,8 +91,7 @@ def test_activate_already_active_session():
     assert response.status_code == 409
     assert "Cannot activate session in SessionStatus.ACTIVE state" in response.json()["detail"]  # ← Fixed
 
-def test_activate_terminated_session():
-    """Test activating terminated session returns 409"""
+def test_activate_terminated_session(): # Test activating a terminated session returns 409
     # Create, activate, then terminate session
     create_response = client.post("/sessions", json={"userId": "terminateduser"})      
     session_id = create_response.json()["sessionId"]
@@ -106,14 +102,12 @@ def test_activate_terminated_session():
     assert response.status_code == 409
     assert "Cannot activate session in SessionStatus.TERMINATED state" in response.json()["detail"]
 
-def test_activate_empty_session_id():
-    """Test activating with empty session ID returns 400"""
+def test_activate_empty_session_id(): # Test activating with empty session ID returns 400
     response = client.put("/sessions/ /activate")
     assert response.status_code == 400
     assert "Session ID cannot be empty" in response.json()["detail"]
 
-def test_session_lifecycle_complete():
-    """Test complete session lifecycle: create → activate → terminate"""
+def test_session_lifecycle_complete(): # Test complete session lifecycle: create, activate, terminate
     # Create
     create_response = client.post("/sessions", json={"userId": "lifecycle"})
     session_id = create_response.json()["sessionId"]
